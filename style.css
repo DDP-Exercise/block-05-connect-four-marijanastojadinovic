@@ -1,0 +1,206 @@
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&family=Nunito:wght@600;800&display=swap');
+
+body {
+    margin: 0;
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(180deg, #0077b6 0%, #00b4d8 40%, #90e0ef 100%);
+    min-height: 100vh;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+}
+
+.image img {
+    height: 300px;
+    width: 300px;
+    border-radius: 10%;
+    border: 5px solid white;
+}
+
+
+#connectfour-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 2rem;
+}
+
+#connectfour-title {
+    font-family: 'Titan One', cursive;
+    font-size: 2.4rem;
+    color: #FFD700;
+    text-shadow: 3px 3px 0px #e63946, 5px 5px 0 rgba(0,0,0,0.2);
+    letter-spacing: 1px;
+}
+
+#connectfour-subtitle {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #caf0f8;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: -0.5rem;
+}
+
+
+#connectfour-status {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #fff;
+    background: rgba(0,0,0,0.25);
+    padding: 8px 24px;
+    border-radius: 999px;
+    min-height: 1.5rem;
+    text-align: center;
+}
+
+
+.connectfour-legend {
+    display: flex;
+    gap: 24px;
+    font-size: 1rem;
+    font-weight: 800;
+    color: #fff;
+    align-items: center;
+}
+
+.legend-item {
+    padding: 6px 16px;
+    border-radius: 999px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s, background 0.2s;
+    opacity: 0.5;
+}
+
+.legend-item.active {
+    border-color: #fff;
+    background: rgba(255,255,255,0.2);
+    opacity: 1;
+}
+
+.connectfour-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+    border: 2px solid rgba(255,255,255,0.4);
+}
+
+.connectfour-dot.spongebob { background: #FFD700; }
+.connectfour-dot.patrick   { background: #ff69b4; }
+
+#connectfour-col-indicators {
+    display: flex;
+    gap: 8px;
+    padding: 0 10px;
+}
+
+.connectfour-col-ind {
+    width: 72px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: color 0.1s, background 0.1s;
+}
+
+.connectfour-col-ind:hover {
+    color: #FFD700;
+    background: rgba(255,255,255,0.15);
+}
+
+
+#connectfour-board {
+    background: linear-gradient(135deg, #c8963e 0%, #e9c46a 50%, #c8963e 100%);
+    border-radius: 20px;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(7, 72px);
+    grid-template-rows: repeat(6, 72px);
+    gap: 8px;
+    cursor: pointer;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.35), inset 0 2px 8px rgba(255,255,255,0.2);
+    border: 3px solid #a67c32;
+}
+
+
+.connectfour-cell {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 35% 35%, #48cae4, #0077b6);
+    transition: background 0.15s;
+    border: 2px solid rgba(0,0,0,0.15);
+}
+
+
+.connectfour-cell.p1 {
+    background: radial-gradient(circle at 35% 35%, #ffe066, #FFD700, #e6b800);
+    border-color: #b8860b;
+}
+
+
+.connectfour-cell.p2 {
+    background: radial-gradient(circle at 35% 35%, #ffb3d9, #ff69b4, #e0509a);
+    border-color: #c2185b;
+}
+
+
+.connectfour-cell.win {
+    box-shadow: inset 0 0 0 4px #fff, 0 0 16px 4px rgba(255,255,255,0.7);
+    animation: gewinn-pulse 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes gewinn-pulse {
+    from { transform: scale(1); }
+    to   { transform: scale(1.08); }
+}
+
+
+.connectfour-cell.warning {
+    background: radial-gradient(circle at 35% 35%, #ff6b6b, #e63946);
+    animation: warning-shake 0.1s ease-in-out 3;
+}
+
+@keyframes warning-shake {
+    0%   { transform: translateX(0); }
+    33%  { transform: translateX(-4px); }
+    66%  { transform: translateX(4px); }
+    100% { transform: translateX(0); }
+}
+
+
+.connectfour-cell.preview-p1 {
+    background: radial-gradient(circle at 35% 35%, rgba(255,224,102,0.5), rgba(255,215,0,0.4));
+}
+.connectfour-cell.preview-p2 {
+    background: radial-gradient(circle at 35% 35%, rgba(255,179,217,0.5), rgba(255,105,180,0.4));
+}
+
+
+#connectfour-reset {
+    font-family: 'Nunito', sans-serif;
+    font-size: 1rem;
+    font-weight: 800;
+    padding: 10px 28px;
+    border-radius: 999px;
+    border: none;
+    background: #FFD700;
+    color: #5a3e00;
+    cursor: pointer;
+    transition: transform 0.1s, background 0.1s;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+
+#connectfour-reset:hover  { background: #ffe44d; transform: scale(1.05); }
+#connectfour-reset:active { transform: scale(0.97); }
