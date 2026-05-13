@@ -1,4 +1,4 @@
-"use strict";
+
 
 /*******************************************************
  *     Connect Four - 100p
@@ -45,3 +45,81 @@
 //      the view (or views, if you decide to make a console-view).
 
 //TODO: Add EventListeners, to forward the user inputs to the model.
+"use strict";
+
+
+const controller = {
+
+    init() {
+        view.init();
+        viewConsole.init();
+        model.init();
+        this.addEventListeners();
+    },
+
+    addEventListeners() {
+        document.addEventListener("click", function(event) {
+
+            if (event.target.id === "connectfour-reset") {
+                model.init();
+                return;
+            }
+
+            let col = event.target.dataset.col;
+            if (col === undefined) return;
+            let success = model.insertStone(Number(col));
+            if (!success) {
+                view.showColumnFullWarning(Number(col));
+            }
+        });
+
+        document.addEventListener("mouseover", function(event) {
+            let col = event.target.dataset.col;
+            if (col === undefined) return;
+            controller.showPreview(Number(col));
+        });
+
+        document.addEventListener("mouseout", function(event) {
+            let col = event.target.dataset.col;
+            if (col === undefined) return;
+            controller.clearPreview();
+        });
+    },
+
+    showPreview(col) {
+        if (model.gameOver) return;
+        this.clearPreview();
+
+
+        let targetRow = -1;
+        for (let r = model.rows - 1; r >= 0; r--) {
+            if (model.board[r][col] === 0) {
+                targetRow = r;
+                break;
+            }
+        }
+
+        if (targetRow === -1) return;
+
+        let boardEl = document.getElementById("connectfour-board");
+        let cells = boardEl.querySelectorAll(".connectfour-cell");
+        let index = targetRow * model.cols + col;
+
+        if (model.currentPlayer.id === 1) {
+            cells[index].classList.add("preview-p1");
+        } else {
+            cells[index].classList.add("preview-p2");
+        }
+    },
+
+    clearPreview() {
+        let previews = document.querySelectorAll(".preview-p1, .preview-p2");
+        for (let i = 0; i < previews.length; i++) {
+            previews[i].classList.remove("preview-p1", "preview-p2");
+        }
+    }
+
+};
+
+
+controller.init();

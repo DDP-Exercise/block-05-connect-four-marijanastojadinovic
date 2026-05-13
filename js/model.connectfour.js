@@ -1,4 +1,4 @@
-"use strict";
+
 
 //TODO: Think of this model as the game-logic.
 //      The model knows everything that is neccessary to manage
@@ -37,3 +37,166 @@
 //      to your custom event.
 
 //TODO: Method to change the current player (and dispatch the according event).
+"use strict";
+
+
+const model = {
+
+    rows: 6,
+    cols: 7,
+
+    players: [
+        { name: "SpongeBob", emoji: "🧽", id: 1 },
+        { name: "Patrick",   emoji: "🌟", id: 2 }
+    ],
+
+
+    currentPlayer: null,
+
+    board: [],
+
+    gameOver: false,
+
+    winningStones: [],
+
+
+    dispatchPlayerChange() {
+        let event = new CustomEvent("connectfour:playerchange", {
+            detail: { player: this.currentPlayer }
+        });
+        document.dispatchEvent(event);
+    },
+
+    dispatchStoneInserted() {
+        let event = new CustomEvent("connectfour:stoneinserted", {
+            detail: { board: this.board }
+        });
+        document.dispatchEvent(event);
+    },
+
+    dispatchGameOver(result) {
+        let event = new CustomEvent("connectfour:gameover", {
+            detail: result
+        });
+        document.dispatchEvent(event);
+    },
+
+
+    initBoard() {
+        this.board = [];
+
+        for (let r = 0; r < this.rows; r++) {
+            this.board[r] = [];
+            for (let c = 0; c < this.cols; c++) {
+                this.board[r][c] = 0;
+            }
+        }
+    },
+
+
+    insertStone(col) {
+        if (this.gameOver) return false;
+        let targetRow = -1;
+        for (let r = this.rows - 1; r >= 0; r--) {
+            if (this.board[r][col] === 0) {
+                targetRow = r;
+                break;
+            }
+        }
+
+        if (targetRow === -1) return false;
+        this.board[targetRow][col] = this.currentPlayer.id;
+        this.dispatchStoneInserted();
+        this.checkGameOver(targetRow, col);
+
+        return true;
+    },
+
+
+    checkGameOver(row, col) {
+
+        let winning = this.checkWin(row, col);
+        if (winning) {
+            this.gameOver = true;
+            this.winningStones = winning;
+            this.dispatchGameOver({
+                type: "win",
+                player: this.currentPlayer,
+                winningStones: this.winningStones
+            });
+            return;
+        }
+
+        let isDraw = true;
+        for (let c = 0; c < this.cols; c++) {
+            if (this.board[0][c] === 0) {
+                isDraw = false;
+                break;
+            }
+        }
+
+        if (isDraw) {
+            this.gameOver = true;
+            this.dispatchGameOver({ type: "draw" });
+            return;
+        }
+
+        this.changePlayer();
+    },
+
+
+
+    checkWin(row, col) {
+        let directions = [
+            [[0, 1],  [0, -1]],
+            [[1, 0],  [-1, 0]],
+            [[1, 1],  [-1, -1]],
+            [[1, -1], [-1, 1]]
+        ];
+
+        let playerId = this.currentPlayer.id;
+
+        for (let i = 0; i < directions.length; i++) {
+            let dirA = directions[i][0];
+            let dirB = directions[i][1];
+            let stones = [[row, col]];
+
+            let allDirs = [dirA, dirB];
+            for (let d = 0; d < allDirs.length; d++) {
+                let dr = allDirs[d][0];
+                let dc = allDirs[d][1];
+                let r = row + dr;
+                let c = col + dc;
+
+                while (r >= 0 && r < this.rows && c >= 0 && c < this.cols && this.board[r][c] === playerId) {
+                    stones.push([r, c]);
+                    r += dr;
+                    c += dc;
+                }
+            }
+
+            if (stones.length >= 4) return stones;
+        }
+
+        return null;
+    },
+
+    changePlayer() {
+        if (this.currentPlayer === this.players[0]) {
+            this.currentPlayer = this.players[1];
+        } else {
+            this.currentPlayer = this.players[0];
+        }
+        this.dispatchPlayerChange();
+    },
+
+    init() {
+        this.gameOver = false;
+        this.winningStones = [];
+        this.currentPlayer = this.players[0];
+        this.initBoard();
+        this.dispatchPlayerChange();
+        this.dispatchStoneInserted();
+    }
+
+};
